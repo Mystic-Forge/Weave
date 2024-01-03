@@ -1,30 +1,34 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 
-using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
 
 namespace Weave {
     public static class WeaveTest {
         public static void StartTest() {
-            var input  = File.ReadAllText("../../../test.wv");
-            var stream = new AntlrInputStream(input);
-            var lexer  = new WeaveLexer(stream);
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new WeaveParser(tokens);
-            parser.BuildParseTree = true;
-            var tree = parser.start();
+            const string root  = "../../../weave_scripts/";
+            var          files = Directory.GetFiles(root).Select(path => new WeaveFileDefinition(path)).ToArray();
 
-            var method  = new WeaveEventInfo("start");
-            var library = new WeaveLibrary();
-            library["start"] = method;
+            var globalLibrary = new WeaveLibrary();
 
-            var listener = new WeaveListener(library);
+            // First pass to index libraries
+            foreach (var f in files) {
+                var firstPassListener = new WeaveLibraryListener(f, globalLibrary);
+                ParseTreeWalker.Default.Walk(firstPassListener, f.Tree);
+            }
 
-            ParseTreeWalker.Default.Walk(listener, tree);
+            // Second parse to create expressions
+            foreach (var f in files) {
+                var secondPassListener = new WeaveListener(f, globalLibrary);
+                ParseTreeWalker.Default.Walk(secondPassListener, f.Tree);
+            }
 
-            listener.FileDefinition.CreateInstance().Invoke(method);
+            foreach (var f in files) {
+                var instance   = f.CreateInstance();
+                var startEvent = globalLibrary["builtin/start"] as WeaveEventInfo;
+                instance.Invoke(startEvent!);
+            }
         }
     }
 }

@@ -19,6 +19,14 @@ INT_TYPE : 'int';
 
 // Operators
 ASSIGN : '=';
+PLUS : '+';
+MINUS : '-';
+MULTIPLY : '*';
+MOD : 'mod';
+IS : 'is';
+AND : 'and';
+OR : 'or';
+NOT : 'not';
 
 // Symbols
 SLASH : '/';

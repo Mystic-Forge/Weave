@@ -72,6 +72,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitImportStatement([NotNull] WeaveParser.ImportStatementContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.exportStatement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExportStatement([NotNull] WeaveParser.ExportStatementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.exportStatement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExportStatement([NotNull] WeaveParser.ExportStatementContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.listener"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

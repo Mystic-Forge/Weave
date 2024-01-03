@@ -1,7 +1,0 @@
-#-
-We are here
--#
-on start do 
-    temp x = 69 # This is a fancy comment that has no vulgar language whatsoever. Penis.
-    print x
-end

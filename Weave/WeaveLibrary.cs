@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Antlr4.Runtime.Tree;
+
+
 namespace Weave;
 
 
@@ -34,10 +37,6 @@ public class WeaveLibrary {
         return child.TryGet(path.Substring(pathIndex + 1), out entry);
     }
     
-    public void AddEvent(string name, WeaveEventInfo eventInfo) => _entries[name] = eventInfo;
-    
-    public WeaveLibrary GetChild(string name) => _children[name];
-    
     private WeaveLibrary GetOrCreateChild(string name) {
         if (_children.TryGetValue(name, out var child)) return child;
         return _children[name] = new();
@@ -45,26 +44,6 @@ public class WeaveLibrary {
 }
 
 public abstract class WeaveLibraryEntry {
-}
-
-public class WeaveFileDefinition : WeaveLibraryEntry {
-    private readonly Dictionary<WeaveEventInfo, Delegate> _listeners = new();
-
-    public void AddListener(WeaveEventInfo listenerInfo, Delegate listener) => _listeners[listenerInfo] = listener;
-
-    public void Invoke(WeaveInstance instance, WeaveEventInfo weaveEventInfo) {
-        if (_listeners.TryGetValue(weaveEventInfo, out var listener)) listener.DynamicInvoke();
-    }
-
-    public void Invoke<T>(WeaveInstance instance, WeaveEventInfo<T> weaveEventInfo, T arg) {
-        if (_listeners.TryGetValue(weaveEventInfo, out var listener)) listener.DynamicInvoke(arg);
-    }
-    
-    public void Invoke<T1, T2>(WeaveInstance instance, WeaveEventInfo<T1, T2> weaveEventInfo, T1 arg1, T2 arg2) {
-        if (_listeners.TryGetValue(weaveEventInfo, out var listener)) listener.DynamicInvoke(arg1, arg2);
-    }
-
-    public WeaveInstance CreateInstance() => new(this);
 }
 
 public class WeaveEventInfo : WeaveLibraryEntry {
@@ -76,12 +55,4 @@ public class WeaveEventInfo : WeaveLibraryEntry {
         Name           = name;
         ParameterTypes = parameterTypes;
     }
-}
-
-public class WeaveEventInfo<T> : WeaveEventInfo {
-    public WeaveEventInfo(string name) : base(name, typeof(T)) { }
-}
-
-public class WeaveEventInfo<T1, T2> : WeaveEventInfo {
-    public WeaveEventInfo(string name) : base(name, typeof(T1), typeof(T2)) { }
 }

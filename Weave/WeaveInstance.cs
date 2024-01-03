@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+
+using Antlr4.Runtime;
 
 
 namespace Weave;
@@ -10,9 +13,34 @@ public class WeaveInstance {
 
     public WeaveInstance(WeaveFileDefinition fileDefinition) => FileDefinition = fileDefinition;
 
-    public void Invoke(WeaveEventInfo weaveEventInfo) => FileDefinition.Invoke(this, weaveEventInfo);
+    public void Invoke(WeaveEventInfo weaveEventInfo, params object[] arguments) => FileDefinition.Invoke(this, weaveEventInfo, arguments);
+}
 
-    public void Invoke<T>(WeaveEventInfo<T> weaveEventInfo, T arg) => FileDefinition.Invoke(this, weaveEventInfo, arg);
+public class WeaveFileDefinition {
+    public readonly   string                               Name;
+    private readonly  Dictionary<WeaveEventInfo, Delegate> _listeners = new();
+    internal readonly WeaveLibrary                         Library;
 
-    public void Invoke<T1, T2>(WeaveEventInfo<T1, T2> weaveEventInfo, T1 arg1, T2 arg2) => FileDefinition.Invoke(this, weaveEventInfo, arg1, arg2);
+    internal readonly WeaveParser.StartContext Tree;
+
+    public WeaveFileDefinition(string path) {
+        Library = new();
+
+        Name = Path.GetFileNameWithoutExtension(path);
+
+        var stream = new AntlrInputStream(new FileStream(path, FileMode.Open));
+        var lexer  = new WeaveLexer(stream);
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new WeaveParser(tokens);
+        parser.BuildParseTree = true;
+        Tree                  = parser.start();
+    }
+
+    public void AddListener(WeaveEventInfo listenerInfo, Delegate listener) => _listeners[listenerInfo] = listener;
+
+    public void Invoke(WeaveInstance instance, WeaveEventInfo weaveEventInfo, params object[] arguments) {
+        if (_listeners.TryGetValue(weaveEventInfo, out var listener)) listener.DynamicInvoke(arguments);
+    }
+
+    public WeaveInstance CreateInstance() => new(this);
 }

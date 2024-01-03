@@ -60,6 +60,7 @@
         <Compile Include="WeaveInstance.cs" />
         <Compile Include="WeaveLexer.cs" />
         <Compile Include="WeaveLibrary.cs" />
+        <Compile Include="WeaveLibraryListener.cs" />
         <Compile Include="WeaveListener.cs" />
         <Compile Include="WeaveParser.cs" />
         <Compile Include="WeaveParserBaseListener.cs" />

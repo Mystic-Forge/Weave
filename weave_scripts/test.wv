@@ -1,0 +1,6 @@
+# import builtin/multiply
+import builtin/start
+
+on start do
+    print 1 + 2 * 3
+end

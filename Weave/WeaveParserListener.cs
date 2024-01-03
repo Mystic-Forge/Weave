@@ -61,6 +61,16 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitImportStatement([NotNull] WeaveParser.ImportStatementContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.exportStatement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExportStatement([NotNull] WeaveParser.ExportStatementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.exportStatement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExportStatement([NotNull] WeaveParser.ExportStatementContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.listener"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
