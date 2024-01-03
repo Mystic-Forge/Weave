@@ -1,0 +1,17 @@
+D:\Mystic Forge\Weave\Weave\bin\Debug\Weave.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\Weave.pdb
+D:\Mystic Forge\Weave\Weave\bin\Debug\Antlr4.Runtime.Standard.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\Antlr4.Runtime.Standard.xml
+D:\Mystic Forge\Weave\Weave\obj\Debug\Weave.csproj.AssemblyReference.cache
+D:\Mystic Forge\Weave\Weave\obj\Debug\Weave.csproj.CoreCompileInputs.cache
+D:\Mystic Forge\Weave\Weave\obj\Debug\Weave.csproj.CopyComplete
+D:\Mystic Forge\Weave\Weave\obj\Debug\Weave.dll
+D:\Mystic Forge\Weave\Weave\obj\Debug\Weave.pdb
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Buffers.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Memory.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Numerics.Vectors.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Buffers.xml
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Memory.xml
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Numerics.Vectors.xml
+D:\Mystic Forge\Weave\Weave\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
