@@ -1,2 +1,2 @@
 export start
-event start
+event start with x being Int, y being Int

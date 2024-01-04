@@ -47,14 +47,12 @@ internal class WeaveListener : WeaveParserBaseListener {
 
         var scope = new Scope(null);
 
-        var parameters = eventInfo.ParameterTypes.Zip(context.identifier().Skip(1),
-                (type, identifier) => {
-                    var name     = identifier.Start.Text;
-                    var variable = Expression.Variable(type, name);
-                    scope.AddLocalVariable(name, variable);
-                    return variable;
-                })
-            .ToArray(); // ToArray is needed to force the evaluation of the zip
+        var parametersToUse = context.identifier().Skip(1).Select(i => i.Start.Text);
+        var parameters = eventInfo.Parameters.Where(p => parametersToUse.Contains(p.Key)).Select(p => {
+            var param = Expression.Parameter(p.Value, p.Key);
+            scope.AddLocalVariable(p.Key, param);
+            return param;
+        }).ToArray();
 
         _file.AddListener(eventInfo, Expression.Lambda(ParseTree(context.block(), scope), parameters).Compile());
     }
@@ -77,6 +75,8 @@ internal class WeaveListener : WeaveParserBaseListener {
                 return Expression.Call(writeLineMethod, valueToPrint);
             case WeaveParser.ExpressionContext expression: return ParseExpression(expression, scope);
             case WeaveParser.IfContext ifContext:          return ParseIf(ifContext, scope);
+            case WeaveParser.WhileContext whileContext:    throw new NotImplementedException("While loops are not implemented yet.");
+            case WeaveParser.ForContext forContext:        throw new NotImplementedException("For loops are not implemented yet.");
             case WeaveParser.TempContext temp:
                 var variableName = temp.identifier().Start.Text;
                 var value        = ParseTree(temp.expression(), scope);
@@ -85,7 +85,7 @@ internal class WeaveListener : WeaveParserBaseListener {
                 return Expression.Assign(variable, value);
             case WeaveParser.AssignmentContext assignment: return Expression.Assign(scope.GetVariable(assignment.identifier().Start.Text), ParseTree(assignment.expression(), scope));
             case WeaveParser.LiteralContext literal:       return ParseLiteral(literal.Start.Type, literal.Start.Text);
-            case WeaveParser.IdentifierContext identifier: return scope.GetVariable(identifier.Start.Text);
+            case WeaveParser.IdentifierContext identifier: { return scope.GetVariable(identifier.Start.Text); }
             default:
                 Console.WriteLine($"Unknown context: {context.GetType().Name}");
                 return Expression.Constant(0);
@@ -94,17 +94,19 @@ internal class WeaveListener : WeaveParserBaseListener {
 
     private Expression ParseExpression(WeaveParser.ExpressionContext expressionContext, Scope scope) {
         var first = expressionContext.GetChild(0);
+
         switch (first) {
             case WeaveParser.IfContext ifContext:          return ParseIf(ifContext, scope);
             case WeaveParser.LiteralContext literal:       return ParseLiteral(literal.Start.Type, literal.Start.Text);
-            case WeaveParser.IdentifierContext identifier: return scope.GetVariable(identifier.Start.Text);
+            case WeaveParser.IdentifierContext identifier: { return scope.GetVariable(identifier.Start.Text); }
             case TerminalNodeImpl terminal:
-                switch (terminal.Payload.Type) {
-                    case WeaveParser.NOT: return Expression.Not(ParseTree(expressionContext.expression(0), scope));
-                    case WeaveParser.MINUS: return Expression.Negate(ParseTree(expressionContext.expression(0), scope));
-                }
-                throw new($"Unknown terminal: {terminal.Payload.Type}");
-            case WeaveParser.ExpressionContext: 
+                return terminal.Payload.Type switch {
+                    WeaveParser.NOT    => Expression.Not(ParseTree(expressionContext.expression(0),    scope)),
+                    WeaveParser.MINUS  => Expression.Negate(ParseTree(expressionContext.expression(0), scope)),
+                    WeaveParser.LPAREN => ParseTree(expressionContext.expression(0), scope),
+                    _                  => throw new($"Unknown terminal: {terminal.Payload.Type}"),
+                };
+            case WeaveParser.ExpressionContext:
                 var left  = ParseTree(expressionContext.expression(0), scope);
                 var right = ParseTree(expressionContext.expression(1), scope);
                 return ParseBinaryExpression(left, right, expressionContext.GetChild(1));
@@ -117,12 +119,17 @@ internal class WeaveListener : WeaveParserBaseListener {
         var type = ((TerminalNodeImpl)middle).Payload.Type;
 
         return type switch {
-            WeaveParser.MULTIPLY => Expression.Multiply(left, right),
-            WeaveParser.SLASH    => Expression.Divide(left, right),
-            WeaveParser.PLUS     => Expression.Add(left, right),
-            WeaveParser.MINUS    => Expression.Subtract(left, right),
-            WeaveParser.IS       => Expression.Equal(left, right),
-            _                    => throw new($"Unknown binary expression: {type}"),
+            WeaveParser.MULTIPLY      => Expression.Multiply(left, right),
+            WeaveParser.SLASH         => Expression.Divide(left, right),
+            WeaveParser.PLUS          => Expression.Add(left, right),
+            WeaveParser.MINUS         => Expression.Subtract(left, right),
+            WeaveParser.IS            => Expression.Equal(left, right),
+            WeaveParser.IS_NOT        => Expression.NotEqual(left, right),
+            WeaveParser.GREATER       => Expression.GreaterThan(left, right),
+            WeaveParser.LESS          => Expression.LessThan(left, right),
+            WeaveParser.GREATER_EQUAL => Expression.GreaterThanOrEqual(left, right),
+            WeaveParser.LESS_EQUAL    => Expression.LessThanOrEqual(left, right),
+            _                         => throw new($"Unknown binary expression: {type}"),
         };
     }
 
@@ -160,10 +167,12 @@ internal class WeaveListener : WeaveParserBaseListener {
     }
 
     internal static Type ParseType(int type) {
-        switch (type) {
-            case WeaveParser.INT_TYPE: return typeof(int);
-        }
-
-        throw new NotImplementedException($"Unknown type: {type}");
+        return type switch {
+            WeaveParser.BOOL_TYPE   => typeof(bool),
+            WeaveParser.INT_TYPE    => typeof(int),
+            WeaveParser.FLOAT_TYPE  => typeof(float),
+            WeaveParser.STRING_TYPE => typeof(string),
+            _                       => throw new NotImplementedException($"Unknown type: {type}"),
+        };
     }
 }

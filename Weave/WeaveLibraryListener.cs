@@ -10,7 +10,7 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
     private readonly WeaveLibrary        _globalLibrary;
 
     public WeaveLibraryListener(WeaveFileDefinition file, WeaveLibrary globalLibrary) {
-        _file  = file;
+        _file          = file;
         _globalLibrary = globalLibrary;
     }
 
@@ -18,9 +18,12 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
         foreach (var topLevelContext in context.topLevel()) {
             if (topLevelContext.GetChild(0) is not WeaveParser.EventContext eventContext) continue;
 
-            var id         = eventContext.identifier().Start.Text;
-            var parameters = eventContext.type().Select(t => WeaveListener.ParseType(t.Start.Type));
-            _file.Library[id] = new WeaveEventInfo(id, parameters.ToArray());
+            var id = eventContext.identifier().Start.Text;
+
+            var parameters = eventContext.labeled_type()
+                .ToDictionary(lt => lt.identifier().Start.Text, lt => WeaveListener.ParseType(lt.type().Start.Type));
+
+            _file.Library[id] = new WeaveEventInfo(id, parameters);
         }
 
         foreach (var topLevelContext in context.topLevel()) {

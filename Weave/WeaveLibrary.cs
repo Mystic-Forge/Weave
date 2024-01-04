@@ -48,11 +48,10 @@ public abstract class WeaveLibraryEntry {
 
 public class WeaveEventInfo : WeaveLibraryEntry {
     public string Name { get; }
+    public Dictionary<string, Type> Parameters { get; }
 
-    public Type[] ParameterTypes { get; }
-
-    public WeaveEventInfo(string name, params Type[] parameterTypes) {
-        Name           = name;
-        ParameterTypes = parameterTypes;
+    public WeaveEventInfo(string name, Dictionary<string, Type> parameters) {
+        Name = name;
+        Parameters = parameters;
     }
 }

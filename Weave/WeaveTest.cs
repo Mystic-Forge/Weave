@@ -27,7 +27,7 @@ namespace Weave {
             foreach (var f in files) {
                 var instance   = f.CreateInstance();
                 var startEvent = globalLibrary["builtin/start"] as WeaveEventInfo;
-                instance.Invoke(startEvent!);
+                instance.Invoke(startEvent!, 1, 3);
             }
         }
     }

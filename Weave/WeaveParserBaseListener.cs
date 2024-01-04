@@ -84,18 +84,6 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExportStatement([NotNull] WeaveParser.ExportStatementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="WeaveParser.listener"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterListener([NotNull] WeaveParser.ListenerContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="WeaveParser.listener"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitListener([NotNull] WeaveParser.ListenerContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.event"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -108,6 +96,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEvent([NotNull] WeaveParser.EventContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.listener"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterListener([NotNull] WeaveParser.ListenerContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.listener"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitListener([NotNull] WeaveParser.ListenerContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -119,6 +119,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBlock([NotNull] WeaveParser.BlockContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.labeled_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLabeled_type([NotNull] WeaveParser.Labeled_typeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.labeled_type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLabeled_type([NotNull] WeaveParser.Labeled_typeContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.statement"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -192,6 +204,30 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIf([NotNull] WeaveParser.IfContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.while"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterWhile([NotNull] WeaveParser.WhileContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.while"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitWhile([NotNull] WeaveParser.WhileContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.for"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFor([NotNull] WeaveParser.ForContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.for"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFor([NotNull] WeaveParser.ForContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.identifier"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -204,18 +240,6 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitIdentifier([NotNull] WeaveParser.IdentifierContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="WeaveParser.type"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterType([NotNull] WeaveParser.TypeContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="WeaveParser.type"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitType([NotNull] WeaveParser.TypeContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.literal"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -227,6 +251,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLiteral([NotNull] WeaveParser.LiteralContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterType([NotNull] WeaveParser.TypeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitType([NotNull] WeaveParser.TypeContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>
