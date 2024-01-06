@@ -1,9 +1,0 @@
-import builtin/start
-
-on start with x, y do 
-    print x + y
-end
-
-# function blah with x being Int, y being Int do
-#     print x + y
-# end

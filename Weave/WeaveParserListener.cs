@@ -91,6 +91,26 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitListener([NotNull] WeaveParser.ListenerContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.memory"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterMemory([NotNull] WeaveParser.MemoryContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.memory"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitMemory([NotNull] WeaveParser.MemoryContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunction([NotNull] WeaveParser.FunctionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunction([NotNull] WeaveParser.FunctionContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.block"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -151,25 +171,25 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAssignment([NotNull] WeaveParser.AssignmentContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="WeaveParser.expression"/>.
+	/// Enter a parse tree produced by <see cref="WeaveParser.save"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpression([NotNull] WeaveParser.ExpressionContext context);
+	void EnterSave([NotNull] WeaveParser.SaveContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="WeaveParser.expression"/>.
+	/// Exit a parse tree produced by <see cref="WeaveParser.save"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpression([NotNull] WeaveParser.ExpressionContext context);
+	void ExitSave([NotNull] WeaveParser.SaveContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="WeaveParser.if"/>.
+	/// Enter a parse tree produced by <see cref="WeaveParser.load"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterIf([NotNull] WeaveParser.IfContext context);
+	void EnterLoad([NotNull] WeaveParser.LoadContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="WeaveParser.if"/>.
+	/// Exit a parse tree produced by <see cref="WeaveParser.load"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitIf([NotNull] WeaveParser.IfContext context);
+	void ExitLoad([NotNull] WeaveParser.LoadContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.while"/>.
 	/// </summary>
@@ -191,6 +211,66 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFor([NotNull] WeaveParser.ForContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.exit"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExit([NotNull] WeaveParser.ExitContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.exit"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExit([NotNull] WeaveParser.ExitContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.return"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterReturn([NotNull] WeaveParser.ReturnContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.return"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitReturn([NotNull] WeaveParser.ReturnContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpression([NotNull] WeaveParser.ExpressionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.expression"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpression([NotNull] WeaveParser.ExpressionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.if"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIf([NotNull] WeaveParser.IfContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.if"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIf([NotNull] WeaveParser.IfContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.property_access"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterProperty_access([NotNull] WeaveParser.Property_accessContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.property_access"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitProperty_access([NotNull] WeaveParser.Property_accessContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.function_call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunction_call([NotNull] WeaveParser.Function_callContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.function_call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunction_call([NotNull] WeaveParser.Function_callContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.identifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -200,6 +280,16 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitIdentifier([NotNull] WeaveParser.IdentifierContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.import_identifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterImport_identifier([NotNull] WeaveParser.Import_identifierContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.import_identifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitImport_identifier([NotNull] WeaveParser.Import_identifierContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.literal"/>.
 	/// </summary>
@@ -211,13 +301,13 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitLiteral([NotNull] WeaveParser.LiteralContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// Enter a parse tree produced by <see cref="WeaveParser.list"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterType([NotNull] WeaveParser.TypeContext context);
+	void EnterList([NotNull] WeaveParser.ListContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// Exit a parse tree produced by <see cref="WeaveParser.list"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitType([NotNull] WeaveParser.TypeContext context);
+	void ExitList([NotNull] WeaveParser.ListContext context);
 }

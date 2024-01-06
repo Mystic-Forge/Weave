@@ -1,5 +1,9 @@
 lexer grammar WeaveLexer;
 
+// Comments
+COMMENT : '#' .*? ('\n' | EOF) -> skip;
+BLOCK_COMMENT : '#-' .*? '-#' -> skip;
+
 // Keywords
 ON : 'on';
 IN : 'in';
@@ -17,8 +21,15 @@ EVENT : 'event';
 BEING : 'being';
 WHILE : 'while';
 FOR : 'for';
-STOP : 'stop';
+EXIT : 'exit';
 NEXT : 'next';
+MEMORY : 'memory';
+SAVE : 'save';
+LOAD : 'load';
+AS : 'as';
+FUNCTION : 'function';
+RETURN : 'return';
+OF : 'of';
 
 // Operators
 ASSIGN : '=';
@@ -39,23 +50,18 @@ NOT : 'not';
 // Symbols
 SLASH : '/';
 COMMA : ',';
-COMMENT : '#' .*? '\n' -> skip;
-BLOCK_COMMENT : '#-' .*? '-#' -> skip;
 LPAREN : '(';
 RPAREN : ')';
+LBRACKET : '[';
+RBRACKET : ']';
+DOT : '.';
 
 // Literals
+NIL : 'nil';
 BOOL : 'true' | 'false';
 INT : Digit+;
 FLOAT : Digit+ '.' Digit+;
-STRING : '"' .*? '"'; // Why is '?' needed here?
-
-// Types
-INT_TYPE : 'Int';
-FLOAT_TYPE : 'Float';
-BOOL_TYPE : 'Bool';
-STRING_TYPE : 'String';
-
+STRING : '"' .*? '"';
 NAME : [a-zA-Z_0-9]+;
 
 WS : [ \t\r\n]+ -> skip;

@@ -42,6 +42,7 @@
         <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
           <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
         </Reference>
+        <Reference Include="System.ComponentModel.Composition" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -65,7 +66,7 @@
         <Compile Include="WeaveParser.cs" />
         <Compile Include="WeaveParserBaseListener.cs" />
         <Compile Include="WeaveParserListener.cs" />
-        <Compile Include="WeaveTest.cs" />
+        <Compile Include="Weave.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

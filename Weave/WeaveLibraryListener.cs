@@ -6,33 +6,58 @@ namespace Weave;
 
 
 public class WeaveLibraryListener : WeaveParserBaseListener {
-    private readonly WeaveFileDefinition _file;
-    private readonly WeaveLibrary        _globalLibrary;
+    private readonly WeaveScriptDefinition _script;
+    private readonly WeaveLibrary          _globalLibrary;
 
-    public WeaveLibraryListener(WeaveFileDefinition file, WeaveLibrary globalLibrary) {
-        _file          = file;
+    public WeaveLibraryListener(WeaveScriptDefinition script, WeaveLibrary globalLibrary) {
+        _script        = script;
         _globalLibrary = globalLibrary;
     }
 
     public override void EnterStart(WeaveParser.StartContext context) {
+        foreach (var importContext in context.topLevel().Select(tl => tl.GetChild(0)).OfType<WeaveParser.ImportStatementContext>()) {
+            WeaveListener.DoImport(_script, _globalLibrary, importContext, t => t is WeaveType);
+        }
+
         foreach (var topLevelContext in context.topLevel()) {
-            if (topLevelContext.GetChild(0) is not WeaveParser.EventContext eventContext) continue;
+            switch (topLevelContext.GetChild(0)) {
+                case WeaveParser.EventContext eventContext: {
+                    var id = eventContext.identifier().Start.Text;
 
-            var id = eventContext.identifier().Start.Text;
+                    var parameters = eventContext.labeled_type()
+                        .ToDictionary(lt => lt.identifier().First().Start.Text, lt => WeaveListener.ParseType(lt.identifier().Last().Start.Text, _script.LocalLibrary));
 
-            var parameters = eventContext.labeled_type()
-                .ToDictionary(lt => lt.identifier().Start.Text, lt => WeaveListener.ParseType(lt.type().Start.Type));
+                    _script.LocalLibrary.Set(id, new WeaveEventInfo(id, parameters));
+                    break;
+                }
+                case WeaveParser.MemoryContext memoryContext: {
+                    var id   = memoryContext.identifier().First().Start.Text;
+                    var type = WeaveListener.ParseType(memoryContext.identifier().Last().Start.Text, _script.LocalLibrary);
+                    _script.LocalLibrary.Set(id, new WeaveMemoryInfo(id, type));
+                    break;
+                }
+                case WeaveParser.FunctionContext functionContext: {
+                    var id = functionContext.identifier().Last().Start.Text;
 
-            _file.Library[id] = new WeaveEventInfo(id, parameters);
+                    var parameters = functionContext.labeled_type()
+                        .ToDictionary(lt => lt.identifier().First().Start.Text, lt => WeaveListener.ParseType(lt.identifier().Last().Start.Text, _script.LocalLibrary));
+
+                    var returnType = functionContext.identifier().Length > 1 ? WeaveListener.ParseType(functionContext.identifier().First().Start.Text, _script.LocalLibrary) : null;
+
+                    _script.LocalLibrary.Set(id, new WeaveFunctionInfo(_script, functionContext, id, parameters, returnType));
+                    break;
+                }
+            }
         }
 
         foreach (var topLevelContext in context.topLevel()) {
             if (topLevelContext.GetChild(0) is not WeaveParser.ExportStatementContext exportContext) continue;
 
             var id        = exportContext.identifier().Start.Text;
-            var globalKey = $"{_file.Name}/{id}";
-            Console.WriteLine($"Exporting {globalKey}");
-            _globalLibrary[globalKey] = _file.Library[id];
+            var sep       = _script.Library.LibraryPath == "" ? "" : "/";
+            var globalKey = $"{_script.Library.LibraryPath}{sep}{_script.Name}/{id}";
+            Console.WriteLine($"Exporting {id} to {globalKey}");
+            _globalLibrary.Set(globalKey, _script.LocalLibrary.GetFirst(id));
         }
     }
 }
