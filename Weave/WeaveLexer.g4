@@ -30,6 +30,35 @@ AS : 'as';
 FUNCTION : 'function';
 RETURN : 'return';
 OF : 'of';
+SELF : 'self';
+
+// List function keywords
+FROM : 'from';
+BY : 'by';
+TO : 'to';
+AT : 'at';
+INDEX : 'index';
+SKIP_ITEMS : 'skip';
+TAKE_ITEMS : 'take';
+WHERE : 'where';
+SORTED : 'sorted';
+ASCENDING : 'ascending';
+DESCENDING : 'descending';
+REVERSED : 'reversed';
+SELECT : 'select';
+UNIQUE : 'unique';
+FLATTENED : 'flattened';
+ALL : 'all';
+ANY : 'any';
+SPLIT : 'split';
+APPEND : 'append';
+PREPEND : 'prepend';
+INSERT : 'insert';
+AGGREGATE : 'aggregate';
+COUNT : 'count';
+RANGE : 'range';
+EXCLUSIVE : 'exclusive';
+INCLUSIVE : 'inclusive';
 
 // Operators
 ASSIGN : '=';

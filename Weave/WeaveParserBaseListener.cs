@@ -132,6 +132,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitFunction([NotNull] WeaveParser.FunctionContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.self_assertion"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterSelf_assertion([NotNull] WeaveParser.Self_assertionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.self_assertion"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitSelf_assertion([NotNull] WeaveParser.Self_assertionContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -348,6 +360,18 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitImport_identifier([NotNull] WeaveParser.Import_identifierContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.enum"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterEnum([NotNull] WeaveParser.EnumContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.enum"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitEnum([NotNull] WeaveParser.EnumContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.literal"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -371,6 +395,234 @@ public partial class WeaveParserBaseListener : IWeaveParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitList([NotNull] WeaveParser.ListContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_initialization"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_initialization([NotNull] WeaveParser.List_initializationContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_initialization"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_initialization([NotNull] WeaveParser.List_initializationContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_prefix_function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_prefix_function([NotNull] WeaveParser.List_prefix_functionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_prefix_function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_prefix_function([NotNull] WeaveParser.List_prefix_functionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_index"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_index([NotNull] WeaveParser.List_indexContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_index"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_index([NotNull] WeaveParser.List_indexContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_skip"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_skip([NotNull] WeaveParser.List_skipContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_skip"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_skip([NotNull] WeaveParser.List_skipContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_take"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_take([NotNull] WeaveParser.List_takeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_take"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_take([NotNull] WeaveParser.List_takeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_where"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_where([NotNull] WeaveParser.List_whereContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_where"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_where([NotNull] WeaveParser.List_whereContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_select"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_select([NotNull] WeaveParser.List_selectContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_select"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_select([NotNull] WeaveParser.List_selectContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_flattened"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_flattened([NotNull] WeaveParser.List_flattenedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_flattened"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_flattened([NotNull] WeaveParser.List_flattenedContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_all"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_all([NotNull] WeaveParser.List_allContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_all"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_all([NotNull] WeaveParser.List_allContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_any"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_any([NotNull] WeaveParser.List_anyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_any"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_any([NotNull] WeaveParser.List_anyContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_split"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_split([NotNull] WeaveParser.List_splitContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_split"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_split([NotNull] WeaveParser.List_splitContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_suffix_function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_suffix_function([NotNull] WeaveParser.List_suffix_functionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_suffix_function"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_suffix_function([NotNull] WeaveParser.List_suffix_functionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_sorted"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_sorted([NotNull] WeaveParser.List_sortedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_sorted"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_sorted([NotNull] WeaveParser.List_sortedContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_reversed"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_reversed([NotNull] WeaveParser.List_reversedContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_reversed"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_reversed([NotNull] WeaveParser.List_reversedContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_unique"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_unique([NotNull] WeaveParser.List_uniqueContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_unique"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_unique([NotNull] WeaveParser.List_uniqueContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_range"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_range([NotNull] WeaveParser.List_rangeContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_range"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_range([NotNull] WeaveParser.List_rangeContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_append"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_append([NotNull] WeaveParser.List_appendContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_append"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_append([NotNull] WeaveParser.List_appendContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_prepend"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_prepend([NotNull] WeaveParser.List_prependContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_prepend"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_prepend([NotNull] WeaveParser.List_prependContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_insert"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterList_insert([NotNull] WeaveParser.List_insertContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_insert"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitList_insert([NotNull] WeaveParser.List_insertContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

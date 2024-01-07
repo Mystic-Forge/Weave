@@ -1,2 +1,5 @@
-# export start
-# event start with x being Int, y being Int
+export start
+event start with x being Int, y being Int
+
+export x
+memory x being Int

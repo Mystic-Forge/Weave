@@ -15,12 +15,16 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
     }
 
     public override void EnterStart(WeaveParser.StartContext context) {
-        foreach (var importContext in context.topLevel().Select(tl => tl.GetChild(0)).OfType<WeaveParser.ImportStatementContext>()) {
-            WeaveListener.DoImport(_script, _globalLibrary, importContext, t => t is WeaveType);
-        }
+        foreach (var importContext in context.topLevel().Select(tl => tl.GetChild(0)).OfType<WeaveParser.ImportStatementContext>()) WeaveListener.DoImport(_script, _globalLibrary, importContext, t => t is WeaveType);
 
         foreach (var topLevelContext in context.topLevel()) {
             switch (topLevelContext.GetChild(0)) {
+                case WeaveParser.Self_assertionContext selfAssertionContext: {
+                    var id   = selfAssertionContext.identifier().Start.Text;
+                    var type = WeaveListener.ParseType(id, _script.LocalLibrary);
+                    _script.SelfType = type;
+                    break;
+                }
                 case WeaveParser.EventContext eventContext: {
                     var id = eventContext.identifier().Start.Text;
 
@@ -49,7 +53,7 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
                 }
             }
         }
-
+        
         foreach (var topLevelContext in context.topLevel()) {
             if (topLevelContext.GetChild(0) is not WeaveParser.ExportStatementContext exportContext) continue;
 

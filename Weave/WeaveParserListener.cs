@@ -111,6 +111,16 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunction([NotNull] WeaveParser.FunctionContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.self_assertion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSelf_assertion([NotNull] WeaveParser.Self_assertionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.self_assertion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSelf_assertion([NotNull] WeaveParser.Self_assertionContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.block"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -291,6 +301,16 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitImport_identifier([NotNull] WeaveParser.Import_identifierContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.enum"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterEnum([NotNull] WeaveParser.EnumContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.enum"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitEnum([NotNull] WeaveParser.EnumContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.literal"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -310,4 +330,194 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitList([NotNull] WeaveParser.ListContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_initialization"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_initialization([NotNull] WeaveParser.List_initializationContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_initialization"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_initialization([NotNull] WeaveParser.List_initializationContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_prefix_function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_prefix_function([NotNull] WeaveParser.List_prefix_functionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_prefix_function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_prefix_function([NotNull] WeaveParser.List_prefix_functionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_index"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_index([NotNull] WeaveParser.List_indexContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_index"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_index([NotNull] WeaveParser.List_indexContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_skip"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_skip([NotNull] WeaveParser.List_skipContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_skip"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_skip([NotNull] WeaveParser.List_skipContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_take"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_take([NotNull] WeaveParser.List_takeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_take"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_take([NotNull] WeaveParser.List_takeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_where"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_where([NotNull] WeaveParser.List_whereContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_where"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_where([NotNull] WeaveParser.List_whereContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_select"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_select([NotNull] WeaveParser.List_selectContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_select"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_select([NotNull] WeaveParser.List_selectContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_flattened"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_flattened([NotNull] WeaveParser.List_flattenedContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_flattened"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_flattened([NotNull] WeaveParser.List_flattenedContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_all"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_all([NotNull] WeaveParser.List_allContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_all"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_all([NotNull] WeaveParser.List_allContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_any"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_any([NotNull] WeaveParser.List_anyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_any"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_any([NotNull] WeaveParser.List_anyContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_split"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_split([NotNull] WeaveParser.List_splitContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_split"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_split([NotNull] WeaveParser.List_splitContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_suffix_function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_suffix_function([NotNull] WeaveParser.List_suffix_functionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_suffix_function"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_suffix_function([NotNull] WeaveParser.List_suffix_functionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_sorted"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_sorted([NotNull] WeaveParser.List_sortedContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_sorted"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_sorted([NotNull] WeaveParser.List_sortedContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_reversed"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_reversed([NotNull] WeaveParser.List_reversedContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_reversed"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_reversed([NotNull] WeaveParser.List_reversedContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_unique"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_unique([NotNull] WeaveParser.List_uniqueContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_unique"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_unique([NotNull] WeaveParser.List_uniqueContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_range"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_range([NotNull] WeaveParser.List_rangeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_range"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_range([NotNull] WeaveParser.List_rangeContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_append"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_append([NotNull] WeaveParser.List_appendContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_append"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_append([NotNull] WeaveParser.List_appendContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_prepend"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_prepend([NotNull] WeaveParser.List_prependContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_prepend"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_prepend([NotNull] WeaveParser.List_prependContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.list_insert"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterList_insert([NotNull] WeaveParser.List_insertContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.list_insert"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitList_insert([NotNull] WeaveParser.List_insertContext context);
 }

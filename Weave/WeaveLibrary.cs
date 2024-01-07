@@ -23,7 +23,6 @@ public class WeaveLibrary {
         Name    = name;
         var parentPath = parent?.LibraryPath ?? "";
         LibraryPath = parentPath == "" ? name : $"{parentPath}/{name}";
-        Console.WriteLine($"Created library {LibraryPath}");
     }
 
     public IEnumerable<WeaveLibraryEntry> Get(string path) {
@@ -31,7 +30,7 @@ public class WeaveLibrary {
 
         if (pathIndex == -1)
             return path == "*"
-                ? _entries.Values.Concat(_children.SelectMany(c => c.Value._entries.Values))
+                ? _entries.Values.Concat(_children.SelectMany(child => child.Value.Get("*")))
                 : _entries.TryGetValue(path, out var v)
                     ? new[] {
                         v,
@@ -69,6 +68,7 @@ public class WeaveLibrary {
     }
 
     public void Set(string path, WeaveLibraryEntry value) {
+        Console.WriteLine($"Setting {path} to {value.Name}");
         var pathIndex = path.IndexOf('/');
 
         if (pathIndex == -1) {
@@ -76,11 +76,23 @@ public class WeaveLibrary {
             value.Library  = this;
             return;
         }
+        
 
         GetOrCreateChild(path.Substring(0, pathIndex)).Set(path.Substring(pathIndex + 1), value);
     }
+    
+    /// <summary>
+    /// Informs the library that a type exists at the given path. Adding types to a library allows you to use them within Weave scripts.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="type"></param>
+    public void AddType(string path, Type type) {
+        var name = path.Split('/').Last();
+        var weaveType = new WeaveType(type, name);
+        Set(path, weaveType);
+    }
 
-    public bool TryGet(string path, out WeaveLibraryEntry entry) {
+    public bool TryGetFirst(string path, out WeaveLibraryEntry entry) {
         var results = Get(path).ToArray();
 
         if (results.Any()) {
@@ -92,7 +104,7 @@ public class WeaveLibrary {
         return false;
     }
 
-    public bool TryGet<T>(string path, out T entry) where T : WeaveLibraryEntry {
+    public bool TryGetFirst<T>(string path, out T entry) where T : WeaveLibraryEntry {
         var results = Get<T>(path).ToArray();
 
         if (results.Any()) {
@@ -118,17 +130,18 @@ public class WeaveLibrary {
     /// <param name="path"></param>
     /// <param name="targetLibraryPath"></param>
     public void IndexDirectory(string path, string? targetLibraryPath = null) {
-        var normalizedPath = Path.GetFullPath(path);
+        var rootLibraryPath = targetLibraryPath != null ? targetLibraryPath + "/" : "";
+        var normalizedPath  = Path.GetFullPath(path);
 
         foreach (var filePath in Directory.GetFiles(normalizedPath)) {
-            var relativePath = (targetLibraryPath != null ? targetLibraryPath + "/" : "") + filePath.Substring(normalizedPath.Length).Replace("\\", "/");
+            var relativePath = rootLibraryPath + filePath.Substring(normalizedPath.Length + 1).Replace("\\", "/");
             relativePath = relativePath.Substring(0, relativePath.Length - 3);
             IndexFile(new(filePath), relativePath);
         }
 
         foreach (var folderPath in Directory.GetDirectories(normalizedPath)) {
-            Console.WriteLine($"Indexing folder {folderPath}");
-            IndexDirectory(folderPath, targetLibraryPath + "/" + Path.GetFileName(folderPath));
+            // Console.WriteLine($"Indexing folder {folderPath}");
+            IndexDirectory(folderPath, rootLibraryPath + Path.GetFileName(folderPath));
         }
     }
 
@@ -148,6 +161,7 @@ public class WeaveLibrary {
     private void CompileFile(WeaveScriptDefinition scriptDefinition) {
         var secondPassListener = new WeaveListener(scriptDefinition, this);
         ParseTreeWalker.Default.Walk(secondPassListener, scriptDefinition.Tree);
+        Console.WriteLine($"[Weave] Compiled {scriptDefinition.Name}");
     }
 }
 

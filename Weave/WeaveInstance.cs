@@ -15,10 +15,8 @@ public class WeaveInstance {
     public WeaveScriptDefinition ScriptDefinition { get; private set; }
 
     private readonly Dictionary<WeaveMemoryInfo, object> _memories = new();
-    
-    public Vector3 Position { get; set; } = Vector3.Zero;
 
-    public WeaveInstance(WeaveScriptDefinition scriptDefinition) => ScriptDefinition = scriptDefinition;
+    public WeaveInstance(WeaveScriptDefinition  scriptDefinition) => ScriptDefinition = scriptDefinition;
 
     public void SetScript(WeaveScriptDefinition scriptDefinition) => ScriptDefinition = scriptDefinition;
 
@@ -34,6 +32,8 @@ public class WeaveScriptDefinition : WeaveLibraryEntry {
     internal readonly WeaveLibrary                         LocalLibrary;
 
     internal readonly WeaveParser.StartContext Tree;
+
+    internal Type SelfType = typeof(WeaveInstance);
 
     internal WeaveScriptDefinition(string path) {
         LocalLibrary = new(null, "");
