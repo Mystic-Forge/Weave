@@ -10,7 +10,7 @@ topLevel : self_assertion | exportStatement | importStatement | event | listener
 
 importStatement : IMPORT (import_identifier SLASH)* (identifier | MULTIPLY) (AS identifier)?;
 exportStatement : EXPORT identifier;
-event : EVENT identifier (WITH (labeled_type COMMA)*? labeled_type)?;
+event : type? EVENT identifier (WITH (labeled_type COMMA)*? labeled_type)?;
 listener : ON identifier (WITH (identifier COMMA)*? identifier)? DO block END;
 memory : MEMORY identifier BEING identifier;
 function : identifier? FUNCTION identifier (WITH (labeled_type COMMA)*? labeled_type)? DO block END;
@@ -18,6 +18,7 @@ self_assertion : SELF BEING identifier;
 
 block : statement*;
 
+type : identifier;
 labeled_type : identifier BEING identifier;
 
 // statements

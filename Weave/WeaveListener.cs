@@ -37,28 +37,39 @@ internal class WeaveListener : WeaveParserBaseListener {
             ReturnTarget   = parent?.ReturnTarget;
         }
 
-        public Expression GetIdentifier(string name) {
+        public ParameterExpression GetIdentifier(WeaveParser.IdentifierContext identifier, WeaveScriptDefinition script) {
+            if (TryGetIdentifier(identifier, script, out var expression)) return expression;
+
+            throw new WeaveTokenException(script, identifier.Start, $"Identifier {identifier.Start.Text} is not defined in this scope. Did you forget to declare/load/import it?");
+        }
+
+        public bool TryGetIdentifier(WeaveParser.IdentifierContext identifier, WeaveScriptDefinition script, out ParameterExpression expression) {
+            var name = identifier.Start.Text;
+
             if (name == "self") {
-                if (_selfParameter != null)
-                    return _selfParameter;
-                else
-                    throw new("self is not defined in this scope");
+                if (_selfParameter != null) {
+                    expression = _selfParameter;
+                    return true;
+                } else {
+                    expression = null!;
+                    return false;
+                }
             }
 
-            return _identifierExpressions.TryGetValue(name, out var value) ? value : _parent!.GetIdentifier(name);
+            if (_identifierExpressions.TryGetValue(name, out var value)) {
+                expression = value;
+                return true;
+            }
+
+            if (_parent is not null) return _parent.TryGetIdentifier(identifier, script, out expression);
+
+            expression = null!;
+            return false;
         }
 
         public IEnumerable<ParameterExpression> GetAllVariables() => _identifierExpressions.Values;
 
         public void AddLocalVariable(string name, ParameterExpression value) => _identifierExpressions[name] = value;
-
-        public bool TryGetLocalVariable(string name, out ParameterExpression value) {
-            if (_identifierExpressions.TryGetValue(name, out value)) return true;
-            if (_parent != null) return _parent.TryGetLocalVariable(name, out value);
-
-            value = null!;
-            return false;
-        }
 
         public ParameterExpression? GetSelfParameter() => _selfParameter;
     }
@@ -87,28 +98,24 @@ internal class WeaveListener : WeaveParserBaseListener {
 
         foreach (var entry in entries) {
             if (filter != null && !filter(entry)) continue;
+
             script.LocalLibrary.Set(nameOverride ?? entry.Name, entry);
         }
     }
 
-    public override void EnterMemory(WeaveParser.MemoryContext context) {
-        var id         = context.identifier().First().Start.Text;
-        var type       = ParseType(context.identifier().Last().Start.Text, _script.LocalLibrary);
-        var memoryInfo = new WeaveMemoryInfo(id, type);
-        _script.LocalLibrary.Set(id, memoryInfo);
-    }
-
     public override void ExitListener(WeaveParser.ListenerContext context) {
         var id = context.identifier()[0].Start.Text;
-        if (!_script.LocalLibrary.TryGetFirst(id, out var itemInfo)) throw new($"Tried to subscribe to event \"{id}\" but it does not exist in this scope. Did you forget to import it?");
+        if (!_script.LocalLibrary.TryGetFirst(id, out var itemInfo)) throw new WeaveTokenException(_script, context.identifier()[0].Start, $"Tried to subscribe to event \"{id}\" but it does not exist in this scope. Did you forget to import it?");
 
         if (itemInfo is not WeaveEventInfo eventInfo) throw new($"Tried to subscribe to event \"{id}\" but it is not an event.");
-
-        var selfParameter   = Expression.Parameter(_script.SelfType, "self");
-        var scope           = new Scope(null, selfParameter);
+        
+        var selfParameter = Expression.Parameter(_script.SelfType, "self");
+        var scope         = new Scope(null, selfParameter);
+        var returnLabel   = Expression.Label(eventInfo.ReturnType ?? typeof(void), "return label");
+        scope.ReturnTarget = returnLabel;
         var parametersToUse = context.identifier().Skip(1).Select(i => i.Start.Text);
 
-        var parameters = eventInfo.Parameters.Where(p => parametersToUse.Contains(p.Key))
+        var parameters = eventInfo.Parameters
             .Select(p => {
                 var param = Expression.Parameter(p.Value, p.Key);
                 scope.AddLocalVariable(p.Key, param);
@@ -117,7 +124,14 @@ internal class WeaveListener : WeaveParserBaseListener {
             .Prepend(selfParameter)
             .ToArray();
 
-        _script.AddListener(eventInfo, Expression.Lambda(ParseTree(_script, context.block(), scope), parameters).Compile());
+        _script.AddListener(eventInfo,
+            Expression.Lambda(
+                Expression.Block(
+                    ParseTree(_script, context.block(), scope),
+                    Expression.Label(returnLabel, Expression.Default(eventInfo.ReturnType ?? typeof(void)))
+                ),
+                parameters).Compile()
+        );
     }
 
     internal static Expression ParseTree(WeaveScriptDefinition script, IParseTree context, Scope scope) {
@@ -159,12 +173,12 @@ internal class WeaveListener : WeaveParserBaseListener {
             case WeaveParser.ReturnContext returnContext: {
                 if (scope.ReturnTarget is null) throw new WeaveTokenException(script, returnContext.Start, "Return statement used outside of a appropriate context.");
 
-                var returnExpression = returnContext.expression() != null ? ParseTree(script, returnContext.expression(), scope) : null;
-                var targetReturnType = scope.ReturnTarget.Type;
+                var returnValueExpression = returnContext.expression() != null ? ParseTree(script, returnContext.expression(), scope) : null;
+                var targetReturnType      = scope.ReturnTarget.Type;
 
-                if ((returnExpression?.Type ?? typeof(void)) != targetReturnType) throw new WeaveTokenException(script, returnContext.Start, $"Return type mismatch. Expected {targetReturnType} but got {returnExpression?.Type ?? typeof(void)}.");
+                if ((returnValueExpression?.Type ?? typeof(void)) != targetReturnType) throw new WeaveTokenException(script, returnContext.Start, $"Return type mismatch. Expected {targetReturnType} but got {returnValueExpression?.Type ?? typeof(void)}.");
 
-                return Expression.Return(scope.ReturnTarget!, returnExpression);
+                return Expression.Return(scope.ReturnTarget!, returnValueExpression);
             }
             case WeaveParser.ForContext forContext: {
                 var variableName = forContext.identifier().Start.Text;
@@ -212,11 +226,11 @@ internal class WeaveListener : WeaveParserBaseListener {
                 return Expression.Assign(leftSide, rightSide);
             }
             case WeaveParser.LiteralContext literal:       return ParseLiteral(script, literal, scope);
-            case WeaveParser.IdentifierContext identifier: return scope.GetIdentifier(identifier.Start.Text);
+            case WeaveParser.IdentifierContext identifier: return scope.GetIdentifier(identifier, script);
             case WeaveParser.SaveContext save: {
                 var valueToSave = save.expression() is not null
                     ? ParseTree(script, save.expression(), scope)
-                    : scope.GetIdentifier(save.identifier().First().Start.Text);
+                    : scope.GetIdentifier(save.identifier().First(), script);
 
                 var memoryId   = save.identifier().Last().Start.Text;
                 var memoryInfo = script.LocalLibrary.GetFirst(memoryId);
@@ -226,19 +240,18 @@ internal class WeaveListener : WeaveParserBaseListener {
                 return Expression.Call(scope.GetSelfParameter(), setMemoryMethod, Expression.Constant(memoryInfo), Expression.Convert(valueToSave, typeof(object)));
             }
             case WeaveParser.LoadContext load: {
-                var memoryId     = load.identifier().First().Start.Text;
+                var memoryId = load.identifier().First().Start.Text;
 
-                if(!script.LocalLibrary.TryGetFirst<WeaveMemoryInfo>(memoryId, out var memoryInfo))
-                    throw new WeaveTokenException(script, load.identifier().First().Start, $"A memory with the identifier {memoryId} was not available in this file.");
+                if (!script.LocalLibrary.TryGetFirst<WeaveMemoryInfo>(memoryId, out var memoryInfo)) throw new WeaveTokenException(script, load.identifier().First().Start, $"A memory with the identifier {memoryId} was not available in this file.");
 
                 var                 getMemoryMethod    = typeof(WeaveInstance).GetMethod("GetMemory")!; // TODO: Cache this
                 var                 rawValueExpression = Expression.Call(scope.GetSelfParameter(), getMemoryMethod, Expression.Constant(memoryInfo));
-                var                 targetVariable     = load.identifier().Last().Start.Text;
+                var                 targetVariable     = load.identifier().Last();
                 ParameterExpression variableToSet;
 
-                if (!scope.TryGetLocalVariable(targetVariable, out variableToSet)) {
-                    variableToSet = Expression.Variable(memoryInfo.Type, targetVariable);
-                    scope.AddLocalVariable(targetVariable, variableToSet);
+                if (!scope.TryGetIdentifier(targetVariable, script, out variableToSet)) {
+                    variableToSet = Expression.Variable(memoryInfo.Type, targetVariable.Start.Text);
+                    scope.AddLocalVariable(targetVariable.Start.Text, variableToSet);
                 }
 
                 var valueExpression = Expression.Convert(rawValueExpression, memoryInfo.Type);
@@ -280,7 +293,7 @@ internal class WeaveListener : WeaveParserBaseListener {
                 return Expression.Property(instance, propertyInfo);
             }
             case WeaveParser.LiteralContext literal:       return ParseLiteral(script, literal, scope);
-            case WeaveParser.IdentifierContext identifier: { return scope.GetIdentifier(identifier.Start.Text); }
+            case WeaveParser.IdentifierContext identifier: { return scope.GetIdentifier(identifier, script); }
             case TerminalNodeImpl terminal:
                 return terminal.Payload.Type switch {
                     WeaveParser.NOT    => Expression.Not(ParseTree(script,    expressionContext.expression(0), scope)),
@@ -341,7 +354,7 @@ internal class WeaveListener : WeaveParserBaseListener {
                 // var x = new List<int>();
                 // ((IEnumerable<int>)x).ToArray()
 
-                var toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(value.Type.GetGenericArguments()[0]); 
+                var toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(value.Type.GetGenericArguments()[0]);
                 return Expression.ArrayAccess(Expression.Call(toArrayMethod, value), index);
             }
             case WeaveParser.List_skipContext listSkipContext: {
@@ -396,8 +409,8 @@ internal class WeaveListener : WeaveParserBaseListener {
             WeaveParser.LESS          => Expression.LessThan(left, right),
             WeaveParser.GREATER_EQUAL => Expression.GreaterThanOrEqual(left, right),
             WeaveParser.LESS_EQUAL    => Expression.LessThanOrEqual(left, right),
-            WeaveParser.AND           => Expression.And(left, right),
-            WeaveParser.OR            => Expression.Or(left, right),
+            WeaveParser.AND           => Expression.AndAlso(left, right),
+            WeaveParser.OR            => Expression.OrElse(left, right),
             _                         => throw new($"Unknown binary expression: {type}"),
         };
     }
@@ -507,9 +520,9 @@ internal class WeaveListener : WeaveParserBaseListener {
                 },
                 addExpressions);
         }
-        
-        if(literal.@enum() is not null) {
-            var enumType = ParseType(literal.@enum().identifier().First().Start.Text, script.LocalLibrary);
+
+        if (literal.@enum() is not null) {
+            var enumType  = ParseType(literal.@enum().identifier().First().Start.Text, script.LocalLibrary);
             var enumValue = Enum.Parse(enumType, literal.@enum().identifier().Last().Start.Text);
             return Expression.Constant(enumValue, enumType);
         }

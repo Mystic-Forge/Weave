@@ -42,14 +42,20 @@ public class WeaveLibrary {
 
         if (_children.TryGetValue(nextPart, out var c)) return c.Get(path.Substring(pathIndex + 1));
 
-        throw new($"Library {LibraryPath} does not contain sub-path {path}.");
+        return Enumerable.Empty<WeaveLibraryEntry>();
+        // throw new($"Library {LibraryPath} does not contain sub-path {path}.");
     }
 
     public WeaveLibraryEntry GetFirst(string path) => Get(path).First();
 
     public IEnumerable<T> Get<T>(string path) where T : WeaveLibraryEntry => Get(path).OfType<T>();
 
-    public T GetFirst<T>(string path) where T : WeaveLibraryEntry => Get<T>(path).First();
+    public T GetFirst<T>(string path) where T : WeaveLibraryEntry {
+        var results = Get<T>(path).ToArray();
+        if(results.Any()) return results.First();
+        
+        throw new($"Library {LibraryPath} does not contain sub-path {path}.");
+    }
 
     public WeaveLibrary GetLibrary(string path) {
         var pathIndex = path.IndexOf('/');
@@ -67,8 +73,7 @@ public class WeaveLibrary {
         return _children[nextPart].GetLibrary(path.Substring(pathIndex + 1));
     }
 
-    public void Set(string path, WeaveLibraryEntry value) {
-        Console.WriteLine($"Setting {path} to {value.Name}");
+    internal void Set(string path, WeaveLibraryEntry value) {
         var pathIndex = path.IndexOf('/');
 
         if (pathIndex == -1) {
@@ -172,9 +177,11 @@ public abstract class WeaveLibraryEntry {
 }
 
 public class WeaveEventInfo : WeaveLibraryEntry {
+    public Type?                    ReturnType { get; }
     public Dictionary<string, Type> Parameters { get; }
 
-    public WeaveEventInfo(string name, Dictionary<string, Type> parameters) {
+    public WeaveEventInfo(string name, Type? returnType, Dictionary<string, Type> parameters) {
+        ReturnType = returnType;
         Name       = name;
         Parameters = parameters;
     }

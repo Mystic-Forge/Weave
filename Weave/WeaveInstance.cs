@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Numerics;
-using System.Reflection;
 
 using Antlr4.Runtime;
 
@@ -16,11 +14,15 @@ public class WeaveInstance {
 
     private readonly Dictionary<WeaveMemoryInfo, object> _memories = new();
 
-    public WeaveInstance(WeaveScriptDefinition  scriptDefinition) => ScriptDefinition = scriptDefinition;
+    public WeaveInstance(WeaveScriptDefinition scriptDefinition) => ScriptDefinition = scriptDefinition;
 
     public void SetScript(WeaveScriptDefinition scriptDefinition) => ScriptDefinition = scriptDefinition;
+    
+    public bool HasListener(WeaveEventInfo weaveEventInfo) => ScriptDefinition.HasListener(weaveEventInfo);
 
     public void Invoke(WeaveEventInfo weaveEventInfo, params object[] arguments) => ScriptDefinition.Invoke(this, weaveEventInfo, arguments);
+
+    public T Invoke<T>(WeaveEventInfo weaveEventInfo, params object[] arguments) => ScriptDefinition.Invoke<T>(this, weaveEventInfo, arguments);
 
     public object? GetMemory(WeaveMemoryInfo memoryInfo) => _memories.TryGetValue(memoryInfo, out var value) ? value : null;
 
@@ -29,7 +31,7 @@ public class WeaveInstance {
 
 public class WeaveScriptDefinition : WeaveLibraryEntry {
     private readonly  Dictionary<WeaveEventInfo, Delegate> _listeners = new();
-    internal readonly WeaveLibrary                         LocalLibrary;
+    public readonly WeaveLibrary                         LocalLibrary;
 
     internal readonly WeaveParser.StartContext Tree;
 
@@ -50,7 +52,15 @@ public class WeaveScriptDefinition : WeaveLibraryEntry {
 
     public void AddListener(WeaveEventInfo listenerInfo, Delegate listener) => _listeners[listenerInfo] = listener;
 
+    public bool HasListener(WeaveEventInfo weaveEventInfo) => _listeners.ContainsKey(weaveEventInfo);
+    
     public void Invoke(WeaveInstance instance, WeaveEventInfo weaveEventInfo, params object[] arguments) {
         if (_listeners.TryGetValue(weaveEventInfo, out var listener)) listener.DynamicInvoke(arguments.Prepend(instance).ToArray());
+    }
+
+    public T Invoke<T>(WeaveInstance instance, WeaveEventInfo weaveEventInfo, params object[] arguments) {
+        if (_listeners.TryGetValue(weaveEventInfo, out var listener)) return (T)listener.DynamicInvoke(arguments.Prepend(instance).ToArray());
+
+        throw new($"[Weave] No listener for event {weaveEventInfo.Name}");
     }
 }

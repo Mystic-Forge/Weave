@@ -27,11 +27,12 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
                 }
                 case WeaveParser.EventContext eventContext: {
                     var id = eventContext.identifier().Start.Text;
+                    var type = eventContext.type() is not null ? WeaveListener.ParseType(eventContext.type().Start.Text, _script.LocalLibrary) : null;
 
                     var parameters = eventContext.labeled_type()
                         .ToDictionary(lt => lt.identifier().First().Start.Text, lt => WeaveListener.ParseType(lt.identifier().Last().Start.Text, _script.LocalLibrary));
 
-                    _script.LocalLibrary.Set(id, new WeaveEventInfo(id, parameters));
+                    _script.LocalLibrary.Set(id, new WeaveEventInfo(id, type, parameters));
                     break;
                 }
                 case WeaveParser.MemoryContext memoryContext: {
@@ -57,11 +58,12 @@ public class WeaveLibraryListener : WeaveParserBaseListener {
         foreach (var topLevelContext in context.topLevel()) {
             if (topLevelContext.GetChild(0) is not WeaveParser.ExportStatementContext exportContext) continue;
 
-            var id        = exportContext.identifier().Start.Text;
-            var sep       = _script.Library.LibraryPath == "" ? "" : "/";
-            var globalKey = $"{_script.Library.LibraryPath}{sep}{_script.Name}/{id}";
-            Console.WriteLine($"Exporting {id} to {globalKey}");
-            _globalLibrary.Set(globalKey, _script.LocalLibrary.GetFirst(id));
+            var id          = exportContext.identifier().Start.Text;
+            var sep         = _script.Library.LibraryPath == "" ? "" : "/";
+            var globalKey   = $"{_script.Library.LibraryPath}{sep}{_script.Name}/{id}";
+            var localExportEntry = _script.LocalLibrary.GetFirst(id);
+            _globalLibrary.Set(globalKey, localExportEntry);
+            // Console.WriteLine($"Global is local {_globalLibrary.GetFirst(globalKey) == localExportEntry}");
         }
     }
 }

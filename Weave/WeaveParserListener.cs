@@ -131,6 +131,16 @@ public interface IWeaveParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitBlock([NotNull] WeaveParser.BlockContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterType([NotNull] WeaveParser.TypeContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="WeaveParser.type"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitType([NotNull] WeaveParser.TypeContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="WeaveParser.labeled_type"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

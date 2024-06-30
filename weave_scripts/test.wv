@@ -1,0 +1,5 @@
+event start
+export start
+
+on start do
+end

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace Weave;
@@ -37,12 +40,18 @@ public static class Weave {
         globalLibrary.IndexDirectory("../../../weave_scripts/");
         globalLibrary.Compile();
 
-        var startEvent = globalLibrary.GetFirst<WeaveEventInfo>("a/builtin/start");
+        
+        var startEvent = globalLibrary.GetFirst<WeaveEventInfo>("test/start");
+        // var memory    = globalLibrary.GetFirst<WeaveMemoryInfo>("test/penis");
 
         foreach (var f in globalLibrary.Get<WeaveScriptDefinition>("*")) {
-            // Console.WriteLine($"Running {f}");
-            var instance = new WeaveInstance(f);
-            instance.Invoke(startEvent, 5, 2);
+            if(!f.HasListener(startEvent)) continue;
+            var instance   = new WeaveInstance(f);
+            // var localPenis = f.LocalLibrary.GetFirst<WeaveMemoryInfo>("penis");
+            // Console.WriteLine(localPenis == memory);
+            // instance.SetMemory(localPenis, 5);
+            // instance.SetMemory(memory, 5);
+            instance.Invoke(startEvent);
         }
     }
 }
